@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const rootDir = require("./util/path");
 
-const adminData = require("./routes/admin");
+const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
 const bodyParser = require("body-parser");
@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // const server = http.createServer(app);
 
-app.use("/admin", adminData.routes);
+app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use((req, res, next) => {
