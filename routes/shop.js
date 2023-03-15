@@ -13,6 +13,8 @@ router.get("/checkout", shopController.getCheckout);
 
 router.get("/products", shopController.getProducts);
 
+router.get("/products/:productId", shopController.getProduct);
+
 router.get("/orders", shopController.getOrders);
 
 module.exports = router;
