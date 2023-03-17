@@ -45,6 +45,7 @@ exports.postCart = (req, res, next) => {
   Product.findById(productId, (product) => {
     Cart.addProduct(productId, product.price);
   });
+  res.redirect('/cart')
 };
 
 exports.getOrders = (req, res, next) => {

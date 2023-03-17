@@ -7,7 +7,7 @@ const p = path.join(
   "cart.json"
 );
 
-module.exports = class cart {
+module.exports = class Cart {
   static addProduct(id, productPrice) {
     //Fetch the previous cart
     fs.readFile(p, (err, fileContent) => {
@@ -25,7 +25,7 @@ module.exports = class cart {
         updatedProduct = { ...existingProduct };
         updatedProduct.qty = updatedProduct.qty + 1;
         cart.products = [...cart.products];
-        cart.products[existingProduct] = updatedProduct;
+        cart.products[existingProductIndex] = updatedProduct;
       } else {
         updatedProduct = { id: id, qty: 1 };
         cart.products = [...cart.products, updatedProduct];
