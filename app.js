@@ -1,11 +1,10 @@
 const express = require("express");
 const path = require("path");
 const rootDir = require("./util/path");
-
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
-
+const db = require("./util/database");
 const bodyParser = require("body-parser");
 // const hbs = require("express-handlebars");
 
@@ -15,6 +14,10 @@ const app = express(); //Request handler
 //   "handlebars",
 //   hbs.engine({ layoutsDir: "views/layouts", defaultLayout: "main-layout" })
 // );
+
+db.execute("SELECT * FROM products")
+  .then((result) => console.log(result[0], result[1]))
+  .catch((err) => console.log(err));
 
 app.set("view engine", "ejs");
 app.set("views", "views");
