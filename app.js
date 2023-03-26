@@ -1,10 +1,9 @@
 const express = require("express");
 const path = require("path");
-const rootDir = require("./util/path");
-
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
+const sequelize = require("./util/database");
 
 const bodyParser = require("body-parser");
 // const hbs = require("express-handlebars");
@@ -28,6 +27,11 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
-
-// server.listen(3000);
-app.listen(3000);
+sequelize
+  .sync()
+  .then((result) => {
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
