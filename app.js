@@ -5,8 +5,18 @@ const shopRoutes = require("./routes/shop");
 const errorController = require("./controllers/error");
 // const sequelize = require("./util/database");
 // const Product = require("./models/product");
+
 const User = require("./models/user");
-const mongoConnect = require("./util/database").mongoConnect;
+
+/**
+ * MongoDB connection
+ */
+// const mongoConnect = require("./util/database").mongoConnect;
+
+/**
+ * Mongoose connection
+ */
+const mongoose = require("mongoose");
 
 const bodyParser = require("body-parser");
 // const Cart = require("./models/cart");
@@ -14,7 +24,13 @@ const bodyParser = require("body-parser");
 // const Order = require("./models/order");
 // const OrderItem = require("./models/order-item");
 // const hbs = require("express-handlebars");
-const { PORT } = require("./config");
+const {
+  DB_USERNAME,
+  DB_PASSWORD,
+  DB_HOSTNAME,
+  DB_DOMAINNAME,
+  PORT,
+} = require("./config");
 
 const app = express(); //Request handler
 
@@ -32,9 +48,9 @@ app.use(express.static(path.join(__dirname, "public")));
 // const server = http.createServer(app);
 
 app.use((req, res, next) => {
-  User.findById("642991d0dcbfa3d301e250b1")
+  User.findById("642d4f5d6688c63a98e11abc")
     .then((user) => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
+      req.user = user;
       next();
     })
     .catch((err) => console.log(err));
@@ -79,6 +95,29 @@ app.use(errorController.get404);
 //     console.log(err);
 //   });
 
-mongoConnect(() => {
-  app.listen(`${PORT}`);
-});
+// mongoConnect(() => {
+//   app.listen(`${PORT}`);
+// });
+
+mongoose
+  .connect(
+    `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOSTNAME}.${DB_DOMAINNAME}/shop?retryWrites=true&w=majority`
+  )
+  .then((result) => {
+    User.findOne().then((user) => {
+      if (!user) {
+        const user = new User({
+          name: "Mofor",
+          email: "mofor@email.com",
+          cart: {
+            items: [],
+          },
+        });
+        user.save();
+      }
+    });
+    app.listen(`${PORT}`);
+  })
+  .catch((err) => {
+    console.log("Error encountered: ", err);
+  });
