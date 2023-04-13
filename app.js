@@ -1,5 +1,7 @@
 const express = require("express");
 const path = require("path");
+const csrf = require("csurf");
+const flash = require("connect-flash");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
@@ -20,6 +22,8 @@ const User = require("./models/user");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+
+const csrfProtection = csrf();
 
 const bodyParser = require("body-parser");
 // const Cart = require("./models/cart");
@@ -62,6 +66,9 @@ app.use(
   })
 );
 
+app.use(csrfProtection);
+app.use(flash());
+
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
@@ -84,6 +91,12 @@ app.use((req, res, next) => {
 //     })
 //     .catch((err) => console.log(err));
 // });
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
 
 app.use(authRoutes);
 app.use("/admin", adminRoutes);
@@ -132,18 +145,18 @@ app.use(errorController.get404);
 mongoose
   .connect(MONGODBURI)
   .then((result) => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "Mofor",
-          email: "mofor@email.com",
-          cart: {
-            items: [],
-          },
-        });
-        user.save();
-      }
-    });
+    // User.findOne().then((user) => {
+    //   if (!user) {
+    //     const user = new User({
+    //       name: "Mofor",
+    //       email: "mofor@email.com",
+    //       cart: {
+    //         items: [],
+    //       },
+    //     });
+    //     user.save();
+    //   }
+    // });
     app.listen(`${PORT}`);
   })
   .catch((err) => {
