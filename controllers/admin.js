@@ -40,7 +40,7 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
   const product = new Product({
-    _id: new mongoose.Types.ObjectId("642d581e9762e67d0604b799"),
+    // _id: new mongoose.Types.ObjectId("642d581e9762e67d0604b799"),
     title: title,
     price: price,
     description: description,
