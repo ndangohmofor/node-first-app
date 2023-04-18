@@ -149,6 +149,10 @@ app.use(errorController.get404);
 //   app.listen(`${PORT}`);
 // });
 
+app.use((error, req, res, next) => {
+  res.redirect("/500");
+});
+
 mongoose
   .connect(MONGODBURI)
   .then((result) => {
