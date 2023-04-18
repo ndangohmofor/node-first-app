@@ -1,6 +1,7 @@
 const Product = require("../models/product");
 const { validationResult } = require("express-validator");
 // const mongodb = require("mongodb");
+const mongoose = require("mongoose");
 
 // const ObjectId = mongodb.ObjectId;
 
@@ -25,7 +26,7 @@ exports.postAddProduct = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(422).render("admin/edit-product", {
       pageTitle: "Edit Product",
-      path: "/admin/edit-product",
+      path: "/admin/add-product",
       editing: false,
       hasError: true,
       product: {
@@ -39,6 +40,7 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
   const product = new Product({
+    _id: new mongoose.Types.ObjectId("642d581e9762e67d0604b799"),
     title: title,
     price: price,
     description: description,
@@ -52,8 +54,23 @@ exports.postAddProduct = (req, res, next) => {
       res.redirect("/admin/products");
     })
     .catch((err) => {
-      console.log("error: ");
-      console.log(err);
+      res.redirect("/500");
+      // return res.status(500).render("admin/edit-product", {
+      //   pageTitle: "Edit Product",
+      //   path: "/admin/add-product",
+      //   editing: false,
+      //   hasError: true,
+      //   product: {
+      //     title: title,
+      //     imageUrl: imageUrl,
+      //     price: price,
+      //     description: description,
+      //   },
+      //   errorMessage: "Database operation failed. Please try again",
+      //   validationErrors: [],
+      // });
+      // // console.log("error: ");
+      // // console.log(err);
     });
 };
 
