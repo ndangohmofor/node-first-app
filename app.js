@@ -7,6 +7,7 @@ const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 const errorController = require("./controllers/error");
 const multer = require("multer");
+const helmet = require("helmet");
 // const sequelize = require("./util/database");
 // const Product = require("./models/product");
 
@@ -77,6 +78,7 @@ const store = new MongoDBStore({
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
