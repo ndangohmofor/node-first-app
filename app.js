@@ -11,6 +11,7 @@ const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
 const fs = require("fs");
+const https = require("https");
 // const sequelize = require("./util/database");
 // const Product = require("./models/product");
 
@@ -29,6 +30,9 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
 const csrfProtection = csrf();
+
+const privateKey = fs.readFileSync("server.key");
+const certificate = fs.readFileSync("server.cert");
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -210,7 +214,9 @@ mongoose
     //     user.save();
     //   }
     // });
-    app.listen(`${PORT}`);
+    https
+      .createServer({ key: privateKey, cert: certificate }, app)
+      .listen(`${PORT}`);
   })
   .catch((err) => {
     console.log("Error encountered: ", err);
