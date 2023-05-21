@@ -24,3 +24,7 @@ yarn-debug.log*
 yarn-error.log*
 .vscode
 .eslintcache
+
+# SSL Config Files
+server.cert
+server.key
